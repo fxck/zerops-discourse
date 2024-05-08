@@ -1,17 +1,18 @@
 zerops:
   - setup: discourse
     build:
-      base: 
+      base:
         - nodejs@18
       prepareCommands:
-        - bash <(wget -qO- https://raw.githubusercontent.com/discourse/install-rails/main/linux)
+        - sh ./install-deps.sh
       buildCommands:
         - git clone https://github.com/discourse/discourse.git discourse_tmp
         - mv discourse_tmp/* discourse_tmp/.* /var/www/ && rm -rf discourse_tmp
         - bundle install
         - yarn install
-        - bin/rails db:create 
+        - bin/rails db:create
         - bin/rails db:migrate
         - RAILS_ENV=test bin/rails db:create db:migrate
+      deploy: ./
     run:
       start: bin/ember-cli -u
